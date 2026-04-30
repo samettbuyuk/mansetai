@@ -12,7 +12,7 @@ export interface ProcessedNews {
 export type ProcessMode = 'meta' | 'full';
 
 // Initialize Gemini with the API key from environment
-const genAI = new GoogleGenAI({ apiKey: (process as any).env.GEMINI_API_KEY || "" });
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 const NEWS_SCHEMA = {
   type: Type.ARRAY,
