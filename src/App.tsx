@@ -77,9 +77,9 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 overflow-hidden font-sans">
-      {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 relative z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+    <div className="flex flex-col md:flex-row h-screen w-full bg-slate-50 overflow-hidden font-sans">
+      {/* Sidebar - Hidden on mobile, sticky on desktop */}
+      <aside className="hidden md:flex w-72 bg-white border-r border-slate-200 flex-col shrink-0 relative z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
         <div className="p-8 pb-6 flex items-center gap-3">
           <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
             <Newspaper className="text-white" size={20} />
@@ -155,12 +155,15 @@ export default function App() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0 shadow-sm z-10">
-          <div className="flex items-center gap-6">
+      <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative pb-16 md:pb-0">
+        <header className="h-14 md:h-16 bg-white border-b border-slate-200 px-4 md:px-8 flex items-center justify-between shrink-0 shadow-sm z-10">
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="md:hidden w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <Newspaper className="text-white" size={16} />
+            </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-slate-400">Mod:</span>
-              <span className="text-sm font-bold text-slate-800 flex items-center gap-2 uppercase tracking-tighter">
+              <span className="hidden sm:inline text-sm font-medium text-slate-400">Mod:</span>
+              <span className="text-xs md:text-sm font-bold text-slate-800 flex items-center gap-2 uppercase tracking-tighter">
                 {currentView === 'change' ? (
                   <>
                     <FileEdit size={16} className="text-indigo-600" />
@@ -181,20 +184,20 @@ export default function App() {
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             {currentView === 'change' && (
-              <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 mr-2">
+              <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
                 <button 
                   onClick={() => setProcessMode('meta')}
-                  className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 ${processMode === 'meta' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`px-2 md:px-3 py-1 md:py-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 ${processMode === 'meta' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  Sadece Meta
+                  Meta
                 </button>
                 <button 
                   onClick={() => setProcessMode('full')}
-                  className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 ${processMode === 'full' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`px-2 md:px-3 py-1 md:py-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 ${processMode === 'full' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  Tam İçerik
+                  Tam
                 </button>
               </div>
             )}
@@ -204,27 +207,28 @@ export default function App() {
                 if (currentView === 'change') setInput('');
                 else setGenerateInput('');
               }}
-              className="p-2.5 bg-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all active:scale-90"
+              className="p-2 md:p-2.5 bg-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all active:scale-90"
               title="Girişi Temizle"
             >
-              <Trash2 size={20} />
+              <Trash2 size={18} className="md:w-5 md:h-5" />
             </button>
             <button 
               onClick={currentView === 'change' ? handleProcess : handleGenerate}
               disabled={loading || (currentView === 'change' ? !input.trim() : !generateInput.trim())}
-              className={`px-6 py-2.5 text-white text-sm font-bold rounded-xl shadow-lg transition-all flex items-center gap-2 transform active:scale-[0.97] ${
+              className={`px-3 md:px-6 py-2 md:py-2.5 text-white text-[11px] md:text-sm font-bold rounded-xl shadow-lg transition-all flex items-center gap-2 transform active:scale-[0.97] ${
                 currentView === 'change' 
                   ? 'bg-indigo-600 shadow-indigo-100/50 hover:bg-indigo-700 active:bg-indigo-800' 
                   : 'bg-emerald-600 shadow-emerald-100/50 hover:bg-emerald-700 active:bg-emerald-800'
               } disabled:bg-slate-200 disabled:shadow-none disabled:active:scale-100`}
             >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : <Zap size={18} />}
-              {loading ? 'İşleniyor...' : currentView === 'change' ? 'Editörü Başlat' : 'Haberi Üret'}
+              {loading ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
+              <span className="hidden sm:inline">{loading ? 'İşleniyor...' : currentView === 'change' ? 'Editörü Başlat' : 'Haberi Üret'}</span>
+              <span className="sm:hidden">{loading ? '...' : currentView === 'change' ? 'Başlat' : 'Üret'}</span>
             </button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-hidden p-8">
+        <div className="flex-1 overflow-y-auto md:overflow-hidden p-4 md:p-8">
           <AnimatePresence mode="wait">
             {currentView === 'change' ? (
               <motion.div 
@@ -262,8 +266,8 @@ export default function App() {
                   </div>
                 </motion.div>
 
-                <div className="grid grid-cols-2 gap-8 flex-1 overflow-hidden">
-                  <div className="flex flex-col gap-4 h-full overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 flex-1 overflow-visible lg:overflow-hidden">
+                  <div className="flex flex-col gap-4 h-[400px] lg:h-full lg:overflow-hidden">
                     <div className="px-1">
                       <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Değiştirilecek Haberler</h3>
                     </div>
@@ -272,17 +276,17 @@ export default function App() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Birden fazla haber metnini buraya yapıştırabilirsiniz..."
-                        className="flex-1 p-8 text-sm text-slate-600 leading-relaxed font-mono outline-none resize-none placeholder:text-slate-300 custom-scroll border-none"
+                        className="flex-1 p-6 md:p-8 text-sm text-slate-600 leading-relaxed font-mono outline-none resize-none placeholder:text-slate-300 custom-scroll border-none"
                       />
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4 h-full overflow-hidden">
+                  <div className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden">
                     <div className="px-1">
                       <h3 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">İşlenen Versiyonlar</h3>
                     </div>
-                    <div className="flex-1 bg-indigo-50/10 rounded-3xl border border-indigo-100/50 shadow-inner overflow-hidden flex flex-col">
-                      <div className="flex-1 overflow-y-auto custom-scroll p-8 space-y-8">
+                    <div className="flex-1 bg-indigo-50/10 rounded-3xl border border-indigo-100/50 shadow-inner lg:overflow-hidden flex flex-col">
+                      <div className="flex-1 lg:overflow-y-auto custom-scroll p-4 md:p-8 space-y-6 md:y-8">
                         {activeResults.length > 0 ? (
                           activeResults.map((news) => (
                             <ResultCard key={news.id} news={news} copyToClipboard={copyToClipboard} copiedId={copiedId} toggleExpand={toggleExpand} expandedIds={expandedIds} />
@@ -301,9 +305,9 @@ export default function App() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="grid grid-cols-2 gap-8 h-full overflow-hidden"
+                className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 h-full overflow-visible lg:overflow-hidden"
               >
-                <div className="flex flex-col gap-4 h-full overflow-hidden">
+                <div className="flex flex-col gap-4 h-[300px] lg:h-full lg:overflow-hidden">
                   <div className="px-1">
                     <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Haber Konusu / Detay</h3>
                   </div>
@@ -312,17 +316,17 @@ export default function App() {
                       value={generateInput}
                       onChange={(e) => setGenerateInput(e.target.value)}
                       placeholder="Haber konusunu veya anahtar kelimeleri buraya yazın..."
-                      className="flex-1 p-8 text-sm text-slate-600 leading-relaxed font-mono outline-none resize-none placeholder:text-slate-300 custom-scroll border-none"
+                      className="flex-1 p-6 md:p-8 text-sm text-slate-600 leading-relaxed font-mono outline-none resize-none placeholder:text-slate-300 custom-scroll border-none"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 h-full overflow-hidden">
+                <div className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden">
                   <div className="px-1">
                     <h3 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Sizin İçin Üretilen</h3>
                   </div>
-                  <div className="flex-1 bg-emerald-50/10 rounded-3xl border border-emerald-100/50 shadow-inner overflow-hidden flex flex-col">
-                    <div className="flex-1 overflow-y-auto custom-scroll p-8 space-y-8">
+                  <div className="flex-1 bg-emerald-50/10 rounded-3xl border border-emerald-100/50 shadow-inner lg:overflow-hidden flex flex-col">
+                    <div className="flex-1 lg:overflow-y-auto custom-scroll p-4 md:p-8 space-y-6 md:y-8">
                       {activeGenerated.length > 0 ? (
                         activeGenerated.map((news) => (
                           <ResultCard key={news.id} news={news} copyToClipboard={copyToClipboard} copiedId={copiedId} toggleExpand={toggleExpand} expandedIds={expandedIds} color="emerald" />
@@ -342,63 +346,63 @@ export default function App() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="h-full flex items-center justify-center"
               >
-                <div className="max-w-2xl w-full bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden flex flex-col md:flex-row">
-                  <div className="bg-slate-900 p-12 text-white md:w-5/12 flex flex-col justify-between overflow-hidden relative">
+                <div className="max-w-4xl w-full bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden flex flex-col md:flex-row">
+                  <div className="bg-slate-900 p-8 md:p-12 text-white md:w-5/12 flex flex-col justify-between overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
                     <div className="relative z-10">
-                      <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-xl border border-white/10">
-                        <MessageSquare className="text-white" size={24} />
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6 md:mb-8 backdrop-blur-xl border border-white/10">
+                        <MessageSquare className="text-white" size={20} />
                       </div>
-                      <h2 className="text-3xl font-black tracking-tight mb-4 leading-tight">Bize Ulaşın</h2>
-                      <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                      <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4 leading-tight">Bize Ulaşın</h2>
+                      <p className="text-slate-400 text-xs md:text-sm font-medium leading-relaxed">
                         Manşet AI deneyiminizi geliştirmek için her türlü geri bildirime açığız.
                       </p>
                     </div>
-                    <div className="relative z-10 mt-12">
+                    <div className="relative z-10 mt-8 md:mt-12">
                       <div className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors cursor-pointer group mb-4">
                         <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-indigo-600 transition-all">
                           <Mail size={14} />
                         </div>
-                        <span className="text-xs font-bold tracking-wider">samettbuyuk@gmail.com</span>
+                        <span className="text-[10px] md:text-xs font-bold tracking-wider break-all">samettbuyuk@gmail.com</span>
                       </div>
                     </div>
                   </div>
-                  <div className="p-12 md:w-7/12 bg-white flex flex-col justify-center">
-                    <div className="space-y-8">
+                  <div className="p-8 md:p-12 md:w-7/12 bg-white flex flex-col justify-center">
+                    <div className="space-y-6 md:y-8">
                       <div className="space-y-2">
-                        <h3 className="text-xl font-bold text-slate-900">Geri Bildirimleriniz Değerli</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed">
+                        <h3 className="text-lg md:text-xl font-bold text-slate-900">Geri Bildirimleriniz Değerli</h3>
+                        <p className="text-slate-500 text-xs md:text-sm leading-relaxed">
                           Uygulamada gördüğünüz eksiklikleri, hataları veya yeni özellik önerilerinizi bize iletebilirsiniz.
                         </p>
                       </div>
                       
-                      <div className="space-y-6">
-                        <div className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:border-indigo-100 hover:shadow-lg hover:shadow-indigo-50/50">
-                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 border border-slate-100">
-                            <Sparkles className="text-indigo-600" size={18} />
+                      <div className="space-y-4 md:y-6">
+                        <div className="flex items-start gap-4 p-4 md:p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 border border-slate-100">
+                            <Sparkles className="text-indigo-600" size={16} />
                           </div>
                           <div>
-                            <h4 className="text-sm font-bold text-slate-800 mb-1 tracking-tight">Yeni Özellik Önerileri</h4>
-                            <p className="text-[11px] text-slate-500 font-medium">Hangi araçları burada görmek istersiniz? Fikirlerinizi duymak isteriz.</p>
+                            <h4 className="text-xs md:text-sm font-bold text-slate-800 mb-0.5 md:mb-1 tracking-tight">Yeni Özellikler</h4>
+                            <p className="text-[10px] text-slate-500 font-medium">Hangi araçları burada görmek istersiniz?</p>
                           </div>
                         </div>
 
-                        <div className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:border-red-100 hover:shadow-lg hover:shadow-red-50/50">
-                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 border border-slate-100">
-                            <Trash2 className="text-red-500" size={18} />
+                        <div className="flex items-start gap-4 p-4 md:p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 border border-slate-100">
+                            <Trash2 className="text-red-500" size={16} />
                           </div>
                           <div>
-                            <h4 className="text-sm font-bold text-slate-800 mb-1 tracking-tight">Hata Bildirimi</h4>
-                            <p className="text-[11px] text-slate-500 font-medium">İşleyişte bir sorun mu fark ettiniz? Hemen bildirmeniz bizi mutlu eder.</p>
+                            <h4 className="text-xs md:text-sm font-bold text-slate-800 mb-0.5 md:mb-1 tracking-tight">Hata Bildirimi</h4>
+                            <p className="text-[10px] text-slate-500 font-medium">İşleyişte bir sorun mu fark ettiniz?</p>
                           </div>
                         </div>
                       </div>
                       
                       <a 
                         href="mailto:samettbuyuk@gmail.com"
-                        className="w-full h-14 bg-indigo-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-indigo-100 hover:bg-indigo-700 hover:shadow-indigo-200 transition-all active:scale-[0.98]"
+                        className="w-full h-12 md:h-14 bg-indigo-600 text-white rounded-2xl font-black text-[11px] md:text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-[0.98]"
                       >
-                        <Mail size={18} />
+                        <Mail size={16} />
                         E-Posta Gönder
                       </a>
                     </div>
@@ -409,7 +413,32 @@ export default function App() {
           </AnimatePresence>
         </div>
 
-        <footer className="h-10 bg-white border-t border-slate-200 px-8 flex items-center justify-between text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] shrink-0">
+        {/* Bottom Nav for Mobile */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 h-16 flex items-center justify-between z-30 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+          <button 
+            onClick={() => setCurrentView('change')}
+            className={`flex flex-col items-center gap-1 transition-all ${currentView === 'change' ? 'text-indigo-600' : 'text-slate-400'}`}
+          >
+            <FileEdit size={20} />
+            <span className="text-[9px] font-black uppercase tracking-tighter">Düzenle</span>
+          </button>
+          <button 
+            onClick={() => setCurrentView('generate')}
+            className={`flex flex-col items-center gap-1 transition-all ${currentView === 'generate' ? 'text-emerald-600' : 'text-slate-400'}`}
+          >
+            <Sparkles size={20} />
+            <span className="text-[9px] font-black uppercase tracking-tighter">Üret</span>
+          </button>
+          <button 
+            onClick={() => setCurrentView('contact')}
+            className={`flex flex-col items-center gap-1 transition-all ${currentView === 'contact' ? 'text-slate-800' : 'text-slate-400'}`}
+          >
+            <MessageSquare size={20} />
+            <span className="text-[9px] font-black uppercase tracking-tighter">İletişim</span>
+          </button>
+        </nav>
+
+        <footer className="hidden md:flex h-10 bg-white border-t border-slate-200 px-8 items-center justify-between text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] shrink-0">
           <div>GİZLİLİK MODU: VERİLER SAKLANMAZ</div>
           <div className="flex gap-6">
             <span>Powered by Google Gemini</span>
