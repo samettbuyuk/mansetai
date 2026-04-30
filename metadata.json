@@ -1,0 +1,6 @@
+{
+  "name": "Manşet AI",
+  "description": "Profesyonel haber düzenleme ve otomasyon aracı. Başlıkları, spotları ve ara başlıkları AI ile standartlara uygun hale getirir.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["AI News Processing"]
+}
