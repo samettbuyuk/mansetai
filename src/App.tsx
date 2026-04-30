@@ -228,7 +228,7 @@ export default function App() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto md:overflow-hidden p-4 md:p-8">
+        <div className="flex-1 overflow-y-auto lg:overflow-hidden p-4 md:p-8">
           <AnimatePresence mode="wait">
             {currentView === 'change' ? (
               <motion.div 
@@ -236,7 +236,7 @@ export default function App() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="flex flex-col gap-6 h-full overflow-hidden"
+                className="flex flex-col gap-6 lg:h-full lg:overflow-hidden"
               >
                 {/* Info Panel for News Editing Mode */}
                 <motion.div 
@@ -305,7 +305,7 @@ export default function App() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 h-full overflow-visible lg:overflow-hidden"
+                className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:h-full overflow-visible lg:overflow-hidden"
               >
                 <div className="flex flex-col gap-4 h-[300px] lg:h-full lg:overflow-hidden">
                   <div className="px-1">
