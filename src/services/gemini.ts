@@ -11,8 +11,8 @@ export interface ProcessedNews {
 
 export type ProcessMode = 'meta' | 'full';
 
-// Initialize Gemini with the API key from environment
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+// Initialize Gemini as per skill guidelines
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 const NEWS_SCHEMA = {
   type: Type.ARRAY,
@@ -52,7 +52,7 @@ export async function processNewsBatch(rawText: string, mode: ProcessMode = 'met
       ${rawText}
     `;
 
-    const result = await genAI.models.generateContent({
+    const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
@@ -61,7 +61,7 @@ export async function processNewsBatch(rawText: string, mode: ProcessMode = 'met
       }
     });
 
-    const text = result.text;
+    const text = response.text;
     if (!text) throw new Error("Yapay zekadan boş yanıt geldi.");
     return JSON.parse(text);
   } catch (error: any) {
@@ -90,7 +90,7 @@ export async function generateNews(topic: string): Promise<ProcessedNews[]> {
       Array formatında döndür.
     `;
 
-    const result = await genAI.models.generateContent({
+    const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
@@ -99,7 +99,7 @@ export async function generateNews(topic: string): Promise<ProcessedNews[]> {
       }
     });
 
-    const text = result.text;
+    const text = response.text;
     if (!text) throw new Error("Yapay zekadan boş yanıt geldi.");
     return JSON.parse(text);
   } catch (error: any) {
