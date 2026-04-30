@@ -65,6 +65,9 @@ export async function processNewsBatch(rawText: string, mode: ProcessMode = 'met
     if (!text) throw new Error("Yapay zekadan boş yanıt geldi.");
     return JSON.parse(text);
   } catch (error: any) {
+    if (error.message?.includes("quota") || error.message?.includes("429")) {
+      throw new Error("Günlük kullanım limitine ulaşıldı. Lütfen bir süre sonra tekrar deneyiniz veya API anahtarınızı kontrol ediniz.");
+    }
     console.error("News processing error:", error.message || error);
     throw error;
   }
@@ -103,6 +106,9 @@ export async function generateNews(topic: string): Promise<ProcessedNews[]> {
     if (!text) throw new Error("Yapay zekadan boş yanıt geldi.");
     return JSON.parse(text);
   } catch (error: any) {
+    if (error.message?.includes("quota") || error.message?.includes("429")) {
+      throw new Error("Günlük kullanım limitine ulaşıldı. Lütfen bir süre sonra tekrar deneyiniz veya API anahtarınızı kontrol ediniz.");
+    }
     console.error("News generation error:", error.message || error);
     throw error;
   }
