@@ -44,8 +44,8 @@ export default function App() {
       const newsWithIds = data.map((item, idx) => ({ ...item, id: `NEWS_P_${Date.now()}_${idx}` }));
       setActiveResults(newsWithIds);
       setCurrentView('change');
-    } catch (error) {
-      alert('Haberler işlenirken bir hata oluştu.');
+    } catch (error: any) {
+      alert(error.message || 'Haberler işlenirken bir hata oluştu.');
     } finally {
       setLoading(false);
     }
@@ -59,8 +59,8 @@ export default function App() {
       const newsWithIds = data.map((item, idx) => ({ ...item, id: `NEWS_G_${Date.now()}_${idx}` }));
       setActiveGenerated(newsWithIds);
       setCurrentView('generate');
-    } catch (error) {
-      alert('Haber üretilirken bir hata oluştu.');
+    } catch (error: any) {
+      alert(error.message || 'Haber üretilirken bir hata oluştu.');
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ export default function App() {
             <Newspaper className="text-white" size={20} />
           </div>
           <div>
-            <h1 className="text-lg font-black text-slate-900 tracking-tighter uppercase">Manşet AI</h1>
+            <div className="text-lg font-black text-slate-900 tracking-tighter uppercase">Manşet AI</div>
             <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">Editör Paneli</p>
           </div>
         </div>
@@ -217,7 +217,7 @@ export default function App() {
               >
                 <div className="flex flex-col gap-4 h-full overflow-hidden">
                   <div className="px-1">
-                    <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Değiştirilecek Haberler</h2>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Değiştirilecek Haberler</h3>
                   </div>
                   <div className="flex-1 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
                     <textarea
@@ -231,7 +231,7 @@ export default function App() {
 
                 <div className="flex flex-col gap-4 h-full overflow-hidden">
                   <div className="px-1">
-                    <h2 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">İşlenen Versiyonlar</h2>
+                    <h3 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">İşlenen Versiyonlar</h3>
                   </div>
                   <div className="flex-1 bg-indigo-50/10 rounded-3xl border border-indigo-100/50 shadow-inner overflow-hidden flex flex-col">
                     <div className="flex-1 overflow-y-auto custom-scroll p-8 space-y-8">
@@ -256,7 +256,7 @@ export default function App() {
               >
                 <div className="flex flex-col gap-4 h-full overflow-hidden">
                   <div className="px-1">
-                    <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Haber Konusu / Detay</h2>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Haber Konusu / Detay</h3>
                   </div>
                   <div className="flex-1 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col focus-within:ring-2 focus-within:ring-emerald-100 transition-all">
                     <textarea
@@ -270,7 +270,7 @@ export default function App() {
 
                 <div className="flex flex-col gap-4 h-full overflow-hidden">
                   <div className="px-1">
-                    <h2 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Sizin İçin Üretilen</h2>
+                    <h3 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Sizin İçin Üretilen</h3>
                   </div>
                   <div className="flex-1 bg-emerald-50/10 rounded-3xl border border-emerald-100/50 shadow-inner overflow-hidden flex flex-col">
                     <div className="flex-1 overflow-y-auto custom-scroll p-8 space-y-8">
@@ -311,9 +311,9 @@ const ResultCard: FC<ResultCardProps> = ({ news, copyToClipboard, copiedId, togg
       <div className="flex justify-between items-start gap-4">
         <div className="space-y-1 flex-1">
           <span className={`text-[10px] font-black ${isIndigo ? 'text-indigo-400' : 'text-emerald-400'} uppercase tracking-widest`}>ÖNERİLEN BAŞLIK</span>
-          <h3 className="text-xl font-bold text-slate-900 leading-tight">
+          <h2 className="text-lg font-extrabold text-slate-900 leading-tight">
             {news.formattedHeadline}
-          </h3>
+          </h2>
           {news.originalHeadline && news.originalHeadline !== "" && (
             <p className="text-[10px] text-slate-400 italic font-medium">Kaynak Odaklı: {news.originalHeadline.substring(0, 80)}...</p>
           )}
@@ -379,6 +379,7 @@ function EmptyState({ icon, title, desc }: { icon: ReactNode, title: string, des
          {icon}
        </div>
        <h3 className="text-slate-400 font-semibold mb-2 uppercase tracking-widest text-xs">{title}</h3>
+       <p className="text-slate-300 text-[11px] max-w-[280px] leading-relaxed">{desc}</p>
     </div>
   );
 }
