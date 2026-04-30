@@ -11,7 +11,10 @@ import {
   Copy,
   Check,
   Newspaper,
-  LayoutDashboard
+  LayoutDashboard,
+  Mail,
+  MessageSquare,
+  Info
 } from 'lucide-react';
 
 export default function App() {
@@ -23,7 +26,7 @@ export default function App() {
   const [activeResults, setActiveResults] = useState<ProcessedNews[]>([]);
   const [activeGenerated, setActiveGenerated] = useState<ProcessedNews[]>([]);
   
-  const [currentView, setCurrentView] = useState<'change' | 'generate'>('change');
+  const [currentView, setCurrentView] = useState<'change' | 'generate' | 'contact'>('change');
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -113,6 +116,17 @@ export default function App() {
                 <Sparkles size={18} />
                 <span>Yeni Haber Üret</span>
               </button>
+              <button 
+                onClick={() => setCurrentView('contact')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all transform active:scale-[0.98] ${
+                  currentView === 'contact' 
+                    ? 'bg-slate-800 text-white shadow-md shadow-slate-100' 
+                    : 'text-slate-500 hover:bg-slate-100/80 hover:text-slate-800 active:bg-slate-100'
+                }`}
+              >
+                <MessageSquare size={18} />
+                <span>İletişim</span>
+              </button>
             </div>
           </div>
 
@@ -152,10 +166,15 @@ export default function App() {
                     <FileEdit size={16} className="text-indigo-600" />
                     Haber Düzenleme
                   </>
-                ) : (
+                ) : currentView === 'generate' ? (
                   <>
                     <Sparkles size={16} className="text-emerald-600" />
                     Yapay Zeka Üretimi
+                  </>
+                ) : (
+                  <>
+                    <MessageSquare size={16} className="text-slate-600" />
+                    İletişim & Geri Bildirim
                   </>
                 )}
               </span>
@@ -213,40 +232,70 @@ export default function App() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="grid grid-cols-2 gap-8 h-full overflow-hidden"
+                className="flex flex-col gap-6 h-full overflow-hidden"
               >
-                <div className="flex flex-col gap-4 h-full overflow-hidden">
-                  <div className="px-1">
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Değiştirilecek Haberler</h3>
+                {/* Info Panel for News Editing Mode */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  key={processMode}
+                  className={`px-6 py-4 rounded-2xl border flex items-center gap-4 ${
+                    processMode === 'meta' 
+                      ? 'bg-blue-50/50 border-blue-100 text-blue-700' 
+                      : 'bg-indigo-50/50 border-indigo-100 text-indigo-700'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    processMode === 'meta' ? 'bg-blue-100' : 'bg-indigo-100'
+                  }`}>
+                    <Info size={20} />
                   </div>
-                  <div className="flex-1 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
-                    <textarea
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      placeholder="Birden fazla haber metnini buraya yapıştırabilirsiniz..."
-                      className="flex-1 p-8 text-sm text-slate-600 leading-relaxed font-mono outline-none resize-none placeholder:text-slate-300 custom-scroll border-none"
-                    />
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-widest mb-0.5">
+                      {processMode === 'meta' ? 'Sadece Meta Modu Aktif' : 'Tam İçerik Modu Aktif'}
+                    </h4>
+                    <p className="text-[11px] font-medium opacity-80">
+                      {processMode === 'meta' 
+                        ? 'Bu modda orijinal haber metniniz korunur. AI sadece yeni başlık, ilgi çekici spot ve metni bölen ara başlıklar üretir.' 
+                        : 'Bu modda haberiniz AI tarafından tamamen baştan yazılır. Daha akıcı, profesyonel ve özgün bir anlatım sunar.'}
+                    </p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex flex-col gap-4 h-full overflow-hidden">
-                  <div className="px-1">
-                    <h3 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">İşlenen Versiyonlar</h3>
+                <div className="grid grid-cols-2 gap-8 flex-1 overflow-hidden">
+                  <div className="flex flex-col gap-4 h-full overflow-hidden">
+                    <div className="px-1">
+                      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Değiştirilecek Haberler</h3>
+                    </div>
+                    <div className="flex-1 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+                      <textarea
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Birden fazla haber metnini buraya yapıştırabilirsiniz..."
+                        className="flex-1 p-8 text-sm text-slate-600 leading-relaxed font-mono outline-none resize-none placeholder:text-slate-300 custom-scroll border-none"
+                      />
+                    </div>
                   </div>
-                  <div className="flex-1 bg-indigo-50/10 rounded-3xl border border-indigo-100/50 shadow-inner overflow-hidden flex flex-col">
-                    <div className="flex-1 overflow-y-auto custom-scroll p-8 space-y-8">
-                      {activeResults.length > 0 ? (
-                        activeResults.map((news) => (
-                          <ResultCard key={news.id} news={news} copyToClipboard={copyToClipboard} copiedId={copiedId} toggleExpand={toggleExpand} expandedIds={expandedIds} />
-                        ))
-                      ) : (
-                        <EmptyState icon={<FileEdit size={32} />} title="Haber Bekleniyor" desc="Metinleri sol panele ekleyerek işleme başlayın. AI haberlerinizi profesyonelce düzenleyecektir." />
-                      )}
+
+                  <div className="flex flex-col gap-4 h-full overflow-hidden">
+                    <div className="px-1">
+                      <h3 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">İşlenen Versiyonlar</h3>
+                    </div>
+                    <div className="flex-1 bg-indigo-50/10 rounded-3xl border border-indigo-100/50 shadow-inner overflow-hidden flex flex-col">
+                      <div className="flex-1 overflow-y-auto custom-scroll p-8 space-y-8">
+                        {activeResults.length > 0 ? (
+                          activeResults.map((news) => (
+                            <ResultCard key={news.id} news={news} copyToClipboard={copyToClipboard} copiedId={copiedId} toggleExpand={toggleExpand} expandedIds={expandedIds} />
+                          ))
+                        ) : (
+                          <EmptyState icon={<FileEdit size={32} />} title="Haber Bekleniyor" desc="Metinleri sol panele ekleyerek işleme başlayın. AI haberlerinizi profesyonelce düzenleyecektir." />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-            ) : (
+            ) : currentView === 'generate' ? (
               <motion.div 
                 key="generate"
                 initial={{ opacity: 0, x: -20 }}
@@ -281,6 +330,77 @@ export default function App() {
                       ) : (
                         <EmptyState icon={<Sparkles size={32} />} title="Prompt Bekleniyor" desc="Bir konu yazın ve Yapay Zeka'nın sizin için kapsamlı ve profesyonel bir haber üretmesini bekleyin." />
                       )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="contact"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="h-full flex items-center justify-center"
+              >
+                <div className="max-w-2xl w-full bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden flex flex-col md:flex-row">
+                  <div className="bg-slate-900 p-12 text-white md:w-5/12 flex flex-col justify-between overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                    <div className="relative z-10">
+                      <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-xl border border-white/10">
+                        <MessageSquare className="text-white" size={24} />
+                      </div>
+                      <h2 className="text-3xl font-black tracking-tight mb-4 leading-tight">Bize Ulaşın</h2>
+                      <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                        Manşet AI deneyiminizi geliştirmek için her türlü geri bildirime açığız.
+                      </p>
+                    </div>
+                    <div className="relative z-10 mt-12">
+                      <div className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors cursor-pointer group mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-indigo-600 transition-all">
+                          <Mail size={14} />
+                        </div>
+                        <span className="text-xs font-bold tracking-wider">samettbuyuk@gmail.com</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-12 md:w-7/12 bg-white flex flex-col justify-center">
+                    <div className="space-y-8">
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-slate-900">Geri Bildirimleriniz Değerli</h3>
+                        <p className="text-slate-500 text-sm leading-relaxed">
+                          Uygulamada gördüğünüz eksiklikleri, hataları veya yeni özellik önerilerinizi bize iletebilirsiniz.
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-6">
+                        <div className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:border-indigo-100 hover:shadow-lg hover:shadow-indigo-50/50">
+                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 border border-slate-100">
+                            <Sparkles className="text-indigo-600" size={18} />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-800 mb-1 tracking-tight">Yeni Özellik Önerileri</h4>
+                            <p className="text-[11px] text-slate-500 font-medium">Hangi araçları burada görmek istersiniz? Fikirlerinizi duymak isteriz.</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:border-red-100 hover:shadow-lg hover:shadow-red-50/50">
+                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 border border-slate-100">
+                            <Trash2 className="text-red-500" size={18} />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-800 mb-1 tracking-tight">Hata Bildirimi</h4>
+                            <p className="text-[11px] text-slate-500 font-medium">İşleyişte bir sorun mu fark ettiniz? Hemen bildirmeniz bizi mutlu eder.</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <a 
+                        href="mailto:samettbuyuk@gmail.com"
+                        className="w-full h-14 bg-indigo-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-indigo-100 hover:bg-indigo-700 hover:shadow-indigo-200 transition-all active:scale-[0.98]"
+                      >
+                        <Mail size={18} />
+                        E-Posta Gönder
+                      </a>
                     </div>
                   </div>
                 </div>
